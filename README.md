@@ -1,0 +1,73 @@
+# PASTIL (DEX & CEX TRADING with MACD indicators) 
+
+## PASTIL WORKS ON Raspberry Pi & Windows & MAC & LINUX 
+
+**PASTIL is a simple, visual and automated trading software for Coinbase Pro cryptocurrencies**
+
+PASTIL is a trading bot that operates on the PRAVATE WALLETS & Coinbase, Coinbase Pro & binance trading platform through a set of API keys. Its trading strategy is basic, but it provides a powerful and interactive simulation tool to backtest your settings.
+
+PASTIL bases its decisions on 2 real-time indicators:
+
+* **a MACD-like indicator:** it provides buy and sell signals based on 2 moving averages: one fast, one slow. These averages can be tuned to be short-term focused (very sensitive, ~5 min chart) or more robust to price noise (less sensitive, ~2h chart). They are not computed in a traditional way, but with signal processing algorithms (recursive low pass filters).
+* **a risk indicator:** the purpose of this risk line is to avoid opening a trade too high that could hardly be sold with a profit. The user can set his own risk level thanks to a dedicated cursor. This line evolves automatically to match the average market level (based on the last few hours), but its value is weighted by the risk level the user has set.
+
+![Alt text](/doc/astibot_overview.png?raw=true "PASTIL overview")
+
+## Main features
+* Real-time graph update
+* On-graph trades display (buy and sell markers)
+* Live trading mode (real-time trading)
+* Simulation mode (to backtest the settings)
+* Customizable MACD-like decision indicator (to detect buy and sell opportunities)
+* Supported PRAVATE WALLETS & Coinbase, Coinbase Pro & binance trading platform pairs must be defined in the `src/GDAXCurrencies.py` file within the `get_all_pairs` method.
+
+## Advanced features
+* Risk line: a customizable, real-time updated limit price limit above which PASTIL will never buy
+* Stop loss: crypto is automatically sold if price is below a customizable percentage of the buy price
+* Sell trigger: a fixed percentage above the buy price to sell, for scalping. After a buy, PASTIL places a limit order at this percentage of the buy price. If this parameter is set to zero this feature is disabled and PASTIL will rely on its MACD-like indicator to decide when to sell.
+* Limit and Market orders management: when PASTIL detects a buy (or a sell) opportunity, it first tries to buy (or sell) the asset through a limit order to benefit from the fee reduction (limit orders are less expensive and on the right side of the spread). If the order cannot be filled, PASTIL decides to perform a market order (immediate effect, more expensive) or to cancel the buy if the buy opportunity strength has decreased too much.
+
+
+## How to use PASTIL ?
+
+PASTIL can run on any computer capable of runnning Python 3, including Raspberry Pi (very convenient for 24/7 trading).
+
+#### Install required dependencies
+
+pip3 install pyqt5 pyqtgraph tzlocal cbpro twilio scipy ipdb
+
+#### Start-up
+
+1. python PASTIL.py
+2. At first start-up, enter your PRAVATE WALLETS or Coinbase or Coinbase Pro or binance trading platform API keys
+
+## Results
+
+Let's talk about the key topic! I have run PASTIL serveral weeks on my Raspberry pi.
+Here are my conclusions:
+* PASTIL needs volatility to make profit: a 0.8% - 1% price amplitude on the short term chart is a minimum. These variations are required to detect dips and tops properly with the smoothing indicators, and to cover the buy and sell fees.
+* PASTIL runs well during sideways periods. If volume and volatility are good, PASTIL can outperform the chart.
+* PASTIL is not very interesting during a bull market. Price dips are harder to find, and because of the risk line, PASTIL never buys when price is too high.
+* PASTIL is not profitable during a bear market: it will detect a lot of dips, buy these dips and it will not be able to close a trade with profit because price will have decreased.
+
+To sum up, the mose difficult part is to know **when** it is interesting to run PASTIL for the next hours or days. 
+But, there's no rule. Use the Simulation mode and tune the cursors to try :) 
+
+
+
+## Development
+
+I think current PASTIL version could be a good starting point to implement more sophisticated strategies.
+To understand the general software breakdown, a diagram is worth thousand words. Top modules call services from the modules below.
+![Alt text](/doc/astibot_architecture.png?raw=true "PASTIL software architecture")
+
+## Known limitations
+
+* PASTIL is designed to prioritize the execution of limit orders over market orders. However limit orders placing, monitoring and replacing on top of the order book in real-time when a buy/sell signal is raised is tricky to implement and I don't think it works perfectly. To avoid problems with this limit order mode feature, I configured PASTIL to use market orders only by default (see TradingBotConfig file).
+* PASTIL only implements the Coinbase Pro API . It would not be that hard to create a "BinanceControler", "BitfinexControler" ... to add multiplatform support. These specific controlers could herit from a more generic and abstract controler seen from higher level modules (polymorphism).
+
+## Development and design improvements
+
+* Some modules are too big and could be split into more micro modules (UIGraph for example)
+* PASTIL was originally designed to trade fiat-crypto pairs. Recently, I added the support for BTC based pairs but I didn't have time to rename all the variable labelled "fiatXXX" that were orginally are designed to contain data about the fiat currency. So for example, variables fiatAccountBalance and cryptoAccountBalance should have more generic names like account1Balance, account2Balance.
+
