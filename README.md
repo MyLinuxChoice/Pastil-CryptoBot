@@ -10,7 +10,7 @@ PASTIL bases its decisions on 2 real-time indicators:
 
 * **a MACD-like indicator:** it provides buy and sell signals based on 2 moving averages: one fast, one slow. These averages can be tuned to be short-term focused (very sensitive, ~5 min chart) or more robust to price noise (less sensitive, ~2h chart). They are not computed in a traditional way, but with signal processing algorithms (recursive low pass filters).
 * **a risk indicator:** the purpose of this risk line is to avoid opening a trade too high that could hardly be sold with a profit. The user can set his own risk level thanks to a dedicated cursor. This line evolves automatically to match the average market level (based on the last few hours), but its value is weighted by the risk level the user has set.
-
+ 
 ![Alt text](/doc/astibot_overview.png?raw=true "PASTIL overview")
 
 ## Main features
