@@ -38,9 +38,9 @@ pip3 install pyqt5 pyqtgraph tzlocal cbpro twilio scipy ipdb
 
 #### Start-up
 
-1. python PASTIL.py
-2. At first start-up, enter your PRAVATE WALLETS or Coinbase or Coinbase Pro or binance trading platform API keys
 
+2. first edit Settings.json , enter your privatekey wallet or Coinbase or Coinbase Pro or binance trading platform API keys 
+1. python PASTIL.py
 ## Results
 
 Let's talk about the key topic! I have run PASTIL serveral weeks on my Raspberry pi.
