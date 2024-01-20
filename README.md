@@ -13,7 +13,7 @@ PASTIL bases its decisions on 2 real-time indicators:
  
 ![Alt text](/doc/astibot_overview.png?raw=true "PASTIL overview")
 
-
+ 
 ## Updates
 
 * support ethereum, biance, avax cahin ,fantom chain
